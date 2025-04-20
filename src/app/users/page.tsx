@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { RefreshCw } from "lucide-react"
 import { useState } from "react"
 
-export default function UsersPage() {
+export default function LeadsPage() {
   const { users, isLoading, isError, importUsers } = useUsers()
   const [isImporting, setIsImporting] = useState(false)
 
@@ -15,7 +15,7 @@ export default function UsersPage() {
       setIsImporting(true)
       await importUsers()
     } catch (error) {
-      console.error("Failed to import users:", error)
+      console.error("Failed to import leads:", error)
     } finally {
       setIsImporting(false)
     }
@@ -26,14 +26,14 @@ export default function UsersPage() {
       <div className="flex flex-col gap-4">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Users</h1>
-            <p className="text-muted-foreground">Manage your users</p>
+            <h1 className="text-3xl font-bold tracking-tight">Leads</h1>
+            <p className="text-muted-foreground">Manage your leads</p>
           </div>
           <Button onClick={handleImport} disabled={isImporting}>
             <RefreshCw
               className={`mr-2 h-4 w-4 ${isImporting ? "animate-spin" : ""}`}
             />
-            {isImporting ? "Importing..." : "Import Users"}
+            {isImporting ? "Importing..." : "Import Leads"}
           </Button>
         </div>
         <UsersTable users={users} isLoading={isLoading} isError={isError} />

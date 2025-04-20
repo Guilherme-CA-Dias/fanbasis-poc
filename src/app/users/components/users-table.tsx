@@ -24,7 +24,7 @@ export function UsersTable({
     return (
       <div className="rounded-md border p-8 text-center">
         <p className="text-muted-foreground">
-          Error loading users. Please try again later.
+          Error loading leads. Please try again later.
         </p>
       </div>
     )
@@ -35,7 +35,7 @@ export function UsersTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>User ID</TableHead>
+            <TableHead>Lead ID</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Created At</TableHead>
             <TableHead>Updated At</TableHead>
@@ -65,19 +65,19 @@ export function UsersTable({
                 colSpan={4}
                 className="text-center text-muted-foreground"
               >
-                No users found
+                No leads found
               </TableCell>
             </TableRow>
           ) : (
-            users.map((user) => (
-              <TableRow key={user.userId}>
-                <TableCell className="font-medium">{user.userId}</TableCell>
-                <TableCell>{user.userName || "-"}</TableCell>
+            users.map((lead) => (
+              <TableRow key={lead.userId}>
+                <TableCell className="font-medium">{lead.userId}</TableCell>
+                <TableCell>{lead.userName || "-"}</TableCell>
                 <TableCell>
-                  {new Date(user.createdAt).toLocaleDateString()}
+                  {new Date(lead.createdAt).toLocaleDateString()}
                 </TableCell>
                 <TableCell>
-                  {new Date(user.updatedAt).toLocaleDateString()}
+                  {new Date(lead.updatedAt).toLocaleDateString()}
                 </TableCell>
               </TableRow>
             ))

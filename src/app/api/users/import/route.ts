@@ -4,9 +4,10 @@ import { User } from '@/models/user';
 import { getAuthFromRequest } from '@/lib/server-auth';
 import { getIntegrationClient } from '@/lib/integration-app-client';
 
-interface ExternalUser {
+interface ExternalLead {
   id: string;
   name: string;
+  // Add any other lead fields you want to store
 }
 
 export async function POST(request: NextRequest) {
@@ -30,37 +31,37 @@ export async function POST(request: NextRequest) {
 
     if (!firstConnection) {
       return NextResponse.json(
-        { error: 'No apps connected to import users from' },
+        { error: 'No apps connected to import leads from' },
         { status: 400 }
       );
     }
 
-    // 3. Get users from the accounting system via Integration.app
+    // 3. Get leads from the CRM via Integration.app
     const result = await client
       .connection(firstConnection.id)
-      .action('list-users')
+      .action('get-leads')
       .run();
 
     // Type assertion since we know the shape of the response
-    const externalUsers = (result.output.records as unknown as ExternalUser[]);
+    const externalLeads = (result.output.records as unknown as ExternalLead[]);
 
-    // 4. Delete existing users for this customer
+    // 4. Delete existing leads for this customer
     await User.deleteMany({ customerId: auth.customerId });
 
-    // 5. Create new users from the imported data
-    const users = await User.create(
-      externalUsers.map((extUser) => ({
-        userId: extUser.id,
-        userName: extUser.name,
+    // 5. Create new leads from the imported data
+    const leads = await User.create(
+      externalLeads.map((lead) => ({
+        userId: lead.id, // Keeping the same schema but storing lead data
+        userName: lead.name,
         customerId: auth.customerId,
       }))
     );
 
-    return NextResponse.json({ users }, { status: 200 });
+    return NextResponse.json({ users: leads }, { status: 200 });
   } catch (error) {
-    console.error('Error importing users:', error);
+    console.error('Error importing leads:', error);
     return NextResponse.json(
-      { error: 'Failed to import users' },
+      { error: 'Failed to import leads' },
       { status: 500 }
     );
   }

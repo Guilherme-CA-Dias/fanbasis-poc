@@ -20,15 +20,15 @@ export function useUsers() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to import users');
+        throw new Error('Failed to import leads');
       }
 
-      // Refresh the users list
+      // Refresh the leads list
       await mutate();
 
       return true;
     } catch (error) {
-      console.error('Error importing users:', error);
+      console.error('Error importing leads:', error);
       throw error;
     }
   };
