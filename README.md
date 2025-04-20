@@ -1,11 +1,12 @@
 # Integration Use Case Template
 
-This is a template for an application showcasing integration capabilities using [Integration.app](https://integration.app). The app is built with Next.js and demonstrates how to implement user authentication and integration token generation.
+This is a template for an application showcasing integration capabilities using [Integration.app](https://integration.app). The app is built with Next.js and demonstrates how to implement user authentication, integration token generation, and CRM lead management.
 
 ## Prerequisites
 
 - Node.js 18+ installed
 - Integration.app workspace credentials (Workspace Key and Secret)
+- MongoDB database
 
 ## Setup
 
@@ -53,27 +54,64 @@ yarn dev
 
 2. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+3. Connect your CRM:
+   - Click on "Integrations" in the navigation
+   - Click "Connect" and follow the OAuth flow
+   - Once connected, go to the "Leads" page
+   - Click "Import Leads" to fetch leads from your CRM
+
 ## Project Structure
 
-- `/src/app` - Next.js app router pages and API routes
-  - `/users` - Example implementation of external data import
-  - `/api` - Backend API routes for users and integration token management
-- `/src/components` - Reusable React components
-- `/src/lib` - Utility functions and helpers
-- `/src/models` - Data models and types
-- `/public` - Static assets
+```
+src/
+├── app/                    # Next.js app router pages and API routes
+│   ├── api/               # Backend API endpoints
+│   │   └── leads/        # Lead management endpoints
+│   │       ├── import/   # Lead import from CRM
+│   │       ├── webhook/  # CRM webhook endpoint
+│   │       └── route.ts  # Lead CRUD operations
+│   ├── leads/            # Leads page components
+│   │   ├── components/   # Lead-specific components
+│   │   └── page.tsx     # Main leads page
+│   └── layout.tsx        # Root layout
+├── components/           # Shared React components
+│   ├── ui/              # UI components (buttons, inputs, etc.)
+│   └── header.tsx       # Navigation header
+├── hooks/               # Custom React hooks
+│   └── use-leads.ts    # Lead management hook
+├── lib/                 # Utility functions
+│   ├── mongodb.ts      # Database connection
+│   ├── fetch-utils.ts  # API helpers
+│   └── integration-app-client.ts  # Integration.app client
+├── models/             # Database models
+│   └── lead.ts        # Lead mongoose model
+└── types/             # TypeScript type definitions
+    └── lead.ts       # Lead-related types
+```
 
-## Template Features
+## Features
+
+### Lead Management
+- Import leads from connected CRM
+- View and edit lead information
+- Real-time updates via webhooks
+- Dark/light theme support
+
+### Integration Capabilities
+- OAuth connection to CRM platforms
+- Webhook handling for real-time updates
+- Bi-directional data sync
+- Error handling and validation
 
 ### Authentication
+The template implements a simple authentication mechanism using a randomly generated UUID as the customer ID. In a production environment, you would replace this with your actual authentication system.
 
-The template implements a simple authentication mechanism using a randomly generated UUID as the customer ID. This simulates a real-world scenario where your application would have proper user authentication. The customer ID is used to:
+## API Endpoints
 
-- Identify the user/customer in the integration platform
-- Generate integration tokens for external app connections
-- Associate imported data with specific customers
-
-### Users Example
+### Leads
+- `GET /api/leads` - List all leads
+- `POST /api/leads/import` - Import leads from CRM
+- `POST /api/leads/webhook` - Handle CRM webhooks
 
 The template includes a complete example of importing and managing users from an external application:
 

@@ -13,10 +13,7 @@ const leadSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  name: {
-    type: String,
-    required: true,
-  },
+  name: String,
   customerId: {
     type: String,
     required: true,

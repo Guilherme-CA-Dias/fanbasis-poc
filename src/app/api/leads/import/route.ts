@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
     const leads = await Lead.create(
       externalLeads.map((lead) => ({
         leadId: lead.id,
-        name: lead.fields.fullName,
+        name: lead.fields.fullName || `${lead.fields.firstName || ''} ${lead.fields.lastName || ''}`.trim() || 'Unnamed Lead',
         customerId: auth.customerId,
         firstName: lead.fields.firstName,
         lastName: lead.fields.lastName,
