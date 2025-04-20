@@ -7,7 +7,7 @@ import { RefreshCw } from "lucide-react"
 import { useState } from "react"
 
 export default function LeadsPage() {
-  const { leads, isLoading, isError, importLeads } = useLeads()
+  const { leads, isLoading, isError, importLeads, updateLead } = useLeads()
   const [isImporting, setIsImporting] = useState(false)
 
   const handleImport = async () => {
@@ -36,7 +36,12 @@ export default function LeadsPage() {
             {isImporting ? "Importing..." : "Import Leads"}
           </Button>
         </div>
-        <LeadsTable leads={leads} isLoading={isLoading} isError={isError} />
+        <LeadsTable 
+          leads={leads} 
+          isLoading={isLoading} 
+          isError={isError}
+          onUpdateLead={updateLead}
+        />
       </div>
     </div>
   )

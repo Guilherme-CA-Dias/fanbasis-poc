@@ -4,10 +4,46 @@ import { Lead } from '@/models/lead';
 import { getAuthFromRequest } from '@/lib/server-auth';
 import { getIntegrationClient } from '@/lib/integration-app-client';
 
+interface LeadFields {
+  id: string;
+  fullName: string;
+  firstName: string;
+  lastName: string;
+  companyName: string;
+  source: string;
+  ownerId: string;
+  contactId: string | null;
+  primaryEmail: string;
+  primaryPhone: string;
+  phones: string[];
+  primaryAddress: {
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    postalCode?: string;
+  };
+  jobTitle: string;
+  emails: string[];
+  addresses: Array<{
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    postalCode?: string;
+  }>;
+  lastActivityTime: string | null;
+}
+
 interface ExternalLead {
   id: string;
   name: string;
-  // Add any other lead fields you want to store
+  uri: string;
+  createdTime: string;
+  updatedTime: string;
+  createdById: string;
+  updatedById: string;
+  fields: LeadFields;
 }
 
 export async function POST(request: NextRequest) {
@@ -48,12 +84,31 @@ export async function POST(request: NextRequest) {
     // 4. Delete existing leads for this customer
     await Lead.deleteMany({ customerId: auth.customerId });
 
-    // 5. Create new leads from the imported data
+    // 5. Create new leads with all available data
     const leads = await Lead.create(
       externalLeads.map((lead) => ({
         leadId: lead.id,
-        name: lead.name,
+        name: lead.fields.fullName,
         customerId: auth.customerId,
+        firstName: lead.fields.firstName,
+        lastName: lead.fields.lastName,
+        companyName: lead.fields.companyName,
+        source: lead.fields.source,
+        ownerId: lead.fields.ownerId,
+        contactId: lead.fields.contactId,
+        primaryEmail: lead.fields.primaryEmail,
+        primaryPhone: lead.fields.primaryPhone,
+        jobTitle: lead.fields.jobTitle,
+        primaryAddress: lead.fields.primaryAddress,
+        emails: lead.fields.emails,
+        phones: lead.fields.phones,
+        addresses: lead.fields.addresses,
+        lastActivityTime: lead.fields.lastActivityTime,
+        uri: lead.uri,
+        createdById: lead.createdById,
+        updatedById: lead.updatedById,
+        createdAt: new Date(lead.createdTime),
+        updatedAt: new Date(lead.updatedTime),
       }))
     );
 
